@@ -1,7 +1,7 @@
 <template>
   <div id="add-blog">
       <h2>Add a new blog post</h2>
-      <form>
+      <form v-if="!submitted">
           <label>Blog title:</label>
           <input type="text" v-model.lazy="blog.title" required/>
           <label>Blog content:</label>
@@ -22,10 +22,14 @@
           <label>Author:</label>
           <select v-model="blog.author">
                 <option v-for="(author, index) in authors" v-bind:key="index">{{author}}</option>
-          </select>
+          </select><br><br>
+          <button id="post" v-on:click.prevent="post">Add Blog</button>
       </form>
-      <div id="preview">
-        <h3>Preview Blog</h3>
+      <div class="success" v-if="submitted">
+          <h4>Successfuly added</h4>
+      </div>
+      <div id="preview" v-if="!submitted">
+        <h3>Blog Preview</h3>
         <p>Blog title: {{blog.title}}</p>
         <p>Blog content:</p>
         <p>{{blog.content}}</p>
@@ -36,6 +40,7 @@
         <p>Author: {{blog.author}}</p>
       </div>
   </div>
+
 </template>
 
 <script>
@@ -46,12 +51,27 @@ export default {
         title: "",
         content: "",
         categories: [],
-        author: ""
+        author: "",
       },
-      authors: ["Dominika", "Vue", "Guest"]
+      authors: ["Dominika", "Vue", "Guest"],
+      submitted: false
+
     }
   },
   methods: {
+      post: function(){
+          this.$http.post('https://jsonplaceholder.typicode.com/posts', {
+            title: this.blog.title,
+            body: this.blog.content,
+            userId: 1,
+          }).then(function(data){
+            console.log(data);
+            this.submitted = true;
+          });
+      },
+      get: function() {
+
+      }
 
   }
 }
@@ -84,10 +104,18 @@ export default {
             display: inline-block;
         }
     }
+    #post {
+        width: 150px;
+    }
     #preview {
         padding: 10px 20px;
         border: 1px dotted #ccc;
         margin: 30px 0;
+        h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px dotted #ccc;
+        }
         ul {
             list-style: none;
             li {
@@ -97,9 +125,14 @@ export default {
                 padding: 2px 5px;
                 border-radius: 2px;
                 margin-right: 5px;
-                background-color: rgb(129, 103, 223);
+                background-color: rgba(129, 103, 223, 0.514);
             }
         }
     }    
+}
+
+// Reusable
+.success {
+    background-color: rgba(18, 184, 101, 0.555);
 }
 </style>
