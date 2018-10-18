@@ -1,10 +1,9 @@
 <template>
   <div v-theme="'wide'" id="show-blogs">
-    <h1>All articles</h1>
+    <h1>List Blog Titles</h1>
     <input type="text" v-model="search" placeholder="search in blogs..." />
     <div class="single-blog" v-for="(blog, index) in filteredBlogs" v-bind:key="index">
-      <h2 v-rainbow><span>{{blog.id}}. </span>{{blog.title | toUpper}}</h2>
-      <article>{{blog.body | snippet }}</article>
+      <h2 v-rainbow>{{blog.title | toUpper}}</h2>
     </div>
   </div>
 </template>
@@ -23,9 +22,6 @@ export default {
       this.blogs = data.body.slice(0, 10);
     })
   },
-  computed: {
-    
-  },
   filters: {
     toUpper(value) {
       return value.toUpperCase();
@@ -42,7 +38,6 @@ export default {
     }
   },
   mixins: [ searchMixin]
-
 }
 </script>
 
@@ -63,6 +58,7 @@ export default {
     padding: 20px;
     border-radius: 5px;
     border-bottom: 1px solid $violet;
+
     article {
       margin: 0 auto;
     }
